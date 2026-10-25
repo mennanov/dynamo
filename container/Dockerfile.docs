@@ -22,7 +22,7 @@ ENV DYNAMO_COMMIT_SHA=$DYNAMO_COMMIT_SHA
 ARG DYNAMO_DOCS_VERSION=dev
 ENV DYNAMO_DOCS_VERSION=$DYNAMO_DOCS_VERSION
 
-# Keep in sync with container/context.yaml `uv_version`.
+# Must match container/context.yaml `uv_version`; blockwatch.toml checks it.
 COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /opt/uv/bin/
 ENV PATH=/opt/uv/bin:${PATH}
 

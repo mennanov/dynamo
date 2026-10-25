@@ -28,7 +28,8 @@ const (
 	DynamoNixlPortName = "nixl"
 
 	// DynamoMaxNixlPorts bounds the per-pod NIXL exporter ports: rank i uses
-	// DynamoNixlPort+i. Keep in sync with MAX_COLOCATED_NIXL_EXPORTERS (nixl_telemetry.py).
+	// DynamoNixlPort+i. Must match MAX_COLOCATED_NIXL_EXPORTERS (nixl_telemetry.py);
+	// blockwatch.toml checks it.
 	DynamoMaxNixlPorts = 8
 
 	DynamoFPMBasePort = 20380
