@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# Values that more than one file must hold, checked by the blockwatch pre-commit hook.
+# Rule reference: https://github.com/mennanov/blockwatch
+
+# In-tree FFmpeg: container/context.yaml decides what wheel_builder.Dockerfile compiles.
+[[block]]
+target = 'container/context.yaml#/dynamo/ffmpeg_version'
+name = 'ffmpeg-version'
+
+# The SBOM must declare the version that is built.
+[[block]]
+target = 'container/compliance/native_packages.yaml#/packages/~[name=ffmpeg]/version'
+same-as = 'container/context.yaml:ffmpeg-version'
+
+# The SBOM gate's floor must be the version that is built.
+[[block]]
+target = 'container/compliance/policy/codec_policy.yaml#/deny_components/~[name=ffmpeg]/min_fixed_version'
+same-as = 'container/context.yaml:ffmpeg-version'
+
+# ffmpeg-next binds the system FFmpeg libraries, so its major must match the in-tree FFmpeg major.
+# same-as points at the YAML path, not at the `container/context.yaml:ffmpeg-version` block, so this pattern applies to both sides.
+[[block]]
+target = 'lib/llm/Cargo.toml#/dependencies/ffmpeg-next/version'
+same-as = 'container/context.yaml#/dynamo/ffmpeg_version'
+same-as-pattern = '^=?(?P<value>\d+)\.'
+
+# uv: Dockerfile.docs copies uv from an image tag instead of reading context.yaml.
+[[block]]
+target = 'container/context.yaml#/dynamo/uv_version'
+name = 'uv-version'
+
+[[block]]
+target = 'container/Dockerfile.docs'
+target-pattern = 'ghcr\.io/astral-sh/uv:(?P<value>[\d.]+)'
+same-as = 'container/context.yaml:uv-version'
+
+# NIXL exporter ports: the operator reserves this many ports per pod, and each rank binds one.
+[[block]]
+target = 'deploy/operator/internal/consts/consts.go'
+target-pattern = 'DynamoMaxNixlPorts\s*=\s*(?P<value>\d+)'
+name = 'max-nixl-ports'
+
+[[block]]
+target = 'components/src/dynamo/common/utils/nixl_telemetry.py'
+target-pattern = '^MAX_COLOCATED_NIXL_EXPORTERS = (?P<value>\d+)'
+same-as = 'deploy/operator/internal/consts/consts.go:max-nixl-ports'

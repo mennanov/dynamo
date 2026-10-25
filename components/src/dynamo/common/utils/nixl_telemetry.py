@@ -42,8 +42,9 @@ _NIXL_FALSE_VALUES = frozenset({"n", "0", "no", "off", "false", "disable"})
 
 _NIXL_UINT16 = re.compile(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)")
 
-# Keep in sync with DynamoMaxNixlPorts in deploy/operator/internal/consts/consts.go:
-# a rank deriving a port past the reserved range would bind a port nothing scrapes.
+# Must match DynamoMaxNixlPorts in deploy/operator/internal/consts/consts.go
+# (blockwatch.toml checks it): a rank deriving a port past the reserved range
+# would bind a port nothing scrapes.
 MAX_COLOCATED_NIXL_EXPORTERS = 8
 
 # Listeners the container already owns, as (env var, default base). Each is

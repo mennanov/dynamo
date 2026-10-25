@@ -82,9 +82,10 @@ dynamo:
   enable_gpu_memory_service: "true"
   # Built from source in wheel_builder with a narrow codec allowlist and
   # --build-suffix=_dynamo, so the SONAMEs cannot collide with the FFmpeg another
-  # wheel vendors. Keep in sync with native_packages.yaml's ffmpeg entry and with
-  # the ffmpeg-next/video-rs pins in lib/llm/Cargo.toml, which track the FFmpeg
-  # major.
+  # wheel vendors. native_packages.yaml's ffmpeg entry and codec_policy.yaml's
+  # floor must hold this version, and the ffmpeg-next/video-rs pins in
+  # lib/llm/Cargo.toml track the FFmpeg major. blockwatch.toml checks the
+  # version and the ffmpeg-next major.
   ffmpeg_version: "9.0.1"
   # ffmpeg build inputs (only consumed when ENABLE_MEDIA_FFMPEG=true).
   nv_codec_headers_ref: "n13.0.19.0"
